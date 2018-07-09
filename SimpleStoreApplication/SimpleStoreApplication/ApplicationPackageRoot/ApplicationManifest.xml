@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="SimpleStoreApplicationType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="ShoppingCartService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="ShoppingCartService_PartitionCount" DefaultValue="1" />
+    <Parameter Name="ShoppingCartService_TargetReplicaSetSize" DefaultValue="3" />
+  </Parameters>
+  <!-- 从 ServicePackage 导入 ServiceManifest。ServiceManifestName 和 ServiceManifestVersion
+       应与 ServiceManifest.xml 文件中定义的 ServiceManifest 元素的
+       名称属性和版本属性相匹配。 -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ShoppingCartServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <DefaultServices>
+    <!-- 在创建此应用程序类型时，以下部分
+         将创建服务类型的实例。你还可以使用 ServiceFabric PowerShell 模块创建
+          一个或多个服务类型实例。
+         
+         以下属性 ServiceTypeName 必须与导入的 ServiceManifest.xml 文件中所定义的名称相匹配。 -->
+    <Service Name="ShoppingCartService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatefulService ServiceTypeName="ShoppingCartServiceType" TargetReplicaSetSize="[ShoppingCartService_TargetReplicaSetSize]" MinReplicaSetSize="[ShoppingCartService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[ShoppingCartService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>
